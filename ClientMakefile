@@ -1,0 +1,8 @@
+COMP=gcc
+TARGET=c_client
+CFLAGS= -std=c89 -pedantic -Wall -lpthread
+MLINK= -o
+FILES= ./client/client.c
+
+c_client: ./client/client.c
+	$(COMP) $(MLINK) $(TARGET) $(CFLAGS) $(FILES)

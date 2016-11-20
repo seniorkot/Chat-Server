@@ -3,10 +3,10 @@ Chat Server v0.1 + Simple client
 
 # Build
 Run make in the repository
-`make`
+`make -f ServMakefile`
 
 Then start
-`./server [port]`
+`./c_server [port]`
 
 # Version 0.1 (20.11.2016)
 Simple chatroom for 50 users.
