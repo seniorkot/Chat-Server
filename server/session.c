@@ -1,6 +1,6 @@
 #include "session.h"
 
-size_t client_count = 0; /* Number of clients */
+static size_t client_count = 0; /* Number of clients */
 
 /* User session */
 void* session(void *args) 
@@ -87,10 +87,11 @@ void add_user(client_t* client)
 		if(clients[i]==NULL)
 		{
 			clients[i]=client;
+			printf("[SYSTEM_MSG]: %s (%s) has joined the server.\n", client->name, inet_ntoa(client->addr.sin_addr));
+			client_count++;
 			break;
 		}
 	}
-	client_count++;
 }
 
 /* Delete client from UserList */
@@ -99,16 +100,17 @@ void delete_user(int uid)
 	size_t i;
 	for (i=0; i<MAX_CLIENTS; i++)
 	{
-		if(clients[i]->uid == uid)
+		if(clients[i] != NULL && clients[i]->uid == uid)
 		{
+			printf("[SYSTEM_MSG]: %s (%s) has left the server.\n", clients[i]->name, inet_ntoa(clients[i]->addr.sin_addr));
 			clients[i]=NULL;
+			client_count--;
 			break;
 		}
 	}
-	client_count--;
 }
 
-size_t get_clients_num()
+size_t get_client_count(void)
 {
 	return client_count;
 }

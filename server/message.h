@@ -10,5 +10,5 @@
 #include "client_t.h"
 
 void send_msg(char*, int);
-void send_msg_all();
+void send_msg_all(char*);
 void send_private_msg(char*, int);

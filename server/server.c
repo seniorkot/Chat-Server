@@ -12,14 +12,14 @@
 
 int main(int argc, char *argv[])
 {
-	int port; /* Server's port */
-	int sockfd; /* Server's socket fd */
-	int clisockfd; /* Client's socket fd */
+	int port; 						/* Server's port */
+	int sockfd; 					/* Server's socket fd */
+	int clisockfd; 					/* Client's socket fd */
 	struct sockaddr_in server_addr;
 	struct sockaddr_in client_addr;
-	pthread_t thread; /* Thread for new user */
-	client_t *client; /* New client */
-	size_t uid = 0; /* User's personal ID on this session */
+	pthread_t thread; 				/* Thread for new user */
+	client_t* client; 				/* New client */
+	size_t uid = 0; 				/* User's personal ID on this session */
 	socklen_t clilen = sizeof(client_addr);
 	
 	/* Usage: ./server port_number */
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 		}
 		
 		/* Check if MAX_CLIENTS is reached */
-		if ((get_clients_num()+1) == MAX_CLIENTS){
+		if ((get_client_count()+1) == MAX_CLIENTS){
 			printf("[SYSTEM_MSG]: Can't accept %s (MAX_CLIENTS is reached).", inet_ntoa(client_addr.sin_addr));
 			close(clisockfd);
 			continue;
@@ -78,7 +78,6 @@ int main(int argc, char *argv[])
 		else
 		{
 			uid++;
-			printf("[SYSTEM_MSG]: %s has been accepted.\n", inet_ntoa(client_addr.sin_addr));
 		}
 		
 		/* Set up client's settings */
