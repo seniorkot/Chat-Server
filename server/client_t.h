@@ -9,5 +9,3 @@ typedef struct {
 	int uid;					/* Client's User ID */
 	char name[24];				/* Client's nickname */
 } client_t;
-
-client_t* clients[MAX_CLIENTS];	/* Clients List */

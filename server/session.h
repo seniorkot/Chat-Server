@@ -12,6 +12,12 @@
 #include "message.h"
 
 void* session(void*);
-void add_user(client_t*);
-void delete_user(int);
+void add_user(client_t*, client_t**);
+void delete_user(int, client_t**);
 size_t get_client_count(void);
+
+/* Arguments for session */
+typedef struct session_args{
+	client_t* client;
+	client_t** clients;
+} session_args_t;

@@ -1,7 +1,7 @@
 #include "message.h"
 
 /* Send message to all users except 1 user */
-void send_msg(char* msg, int uid)
+void send_msg(char* msg, int uid, client_t** clients)
 {
 	size_t i;
 	for(i=0;i<MAX_CLIENTS;i++)
@@ -14,7 +14,7 @@ void send_msg(char* msg, int uid)
 }
 
 /* Send message to all users */
-void send_msg_all(char* msg)
+void send_msg_all(char* msg, client_t** clients)
 {
 	size_t i;
 	for(i=0;i<MAX_CLIENTS;i++)
@@ -27,7 +27,7 @@ void send_msg_all(char* msg)
 }
 
 /* Send private message */
-void send_private_msg(char* msg, int uid)
+void send_private_msg(char* msg, int uid, client_t** clients)
 {
 	size_t i;
 	for(i=0;i<MAX_CLIENTS;i++)

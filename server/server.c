@@ -12,14 +12,16 @@
 
 int main(int argc, char *argv[])
 {
-	int port; 						/* Server's port */
-	int sockfd; 					/* Server's socket fd */
-	int clisockfd; 					/* Client's socket fd */
+	int port; 								/* Server's port */
+	int sockfd; 							/* Server's socket fd */
+	int clisockfd; 							/* Client's socket fd */
 	struct sockaddr_in server_addr;
 	struct sockaddr_in client_addr;
-	pthread_t thread; 				/* Thread for new user */
-	client_t* client; 				/* New client */
-	size_t uid = 0; 				/* User's personal ID on this session */
+	pthread_t thread; 						/* Thread for new user */
+	client_t* client; 						/* New client */
+	size_t uid = 0; 						/* User's personal ID on this session */
+	client_t* clients[MAX_CLIENTS] = {NULL};/* Clients List */
+	session_args_t session_args; 			/* Arguments for session function */
 	socklen_t clilen = sizeof(client_addr);
 	
 	/* Usage: ./server port_number */
@@ -59,6 +61,9 @@ int main(int argc, char *argv[])
 	
 	puts("[SYSTEM_MSG]: Server has been started.");
 	
+	/* First argument for all sessions */
+	session_args.clients = clients;
+	
 	/* Accept clients */
 	while(1)
 	{
@@ -88,11 +93,16 @@ int main(int argc, char *argv[])
 		sprintf(client->name, "%lu", uid);
 		
 		/* Add user to UserList and create new thread */
-		add_user(client);
-		if(pthread_create(&thread, NULL, &session, (void*) client))
+		add_user(client, clients);
+		
+		/* Second argument for this user session */
+		session_args.client = client;
+		
+		/* Create new thread */
+		if(pthread_create(&thread, NULL, &session, (void*) &session_args))
 		{
 			close(clisockfd);
-			delete_user(client->uid);
+			delete_user(client->uid, clients);
 			free(client);
 		}
 	}

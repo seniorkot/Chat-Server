@@ -9,6 +9,6 @@
 
 #include "client_t.h"
 
-void send_msg(char*, int);
-void send_msg_all(char*);
-void send_private_msg(char*, int);
+void send_msg(char*, int, client_t**);
+void send_msg_all(char*, client_t**);
+void send_private_msg(char*, int, client_t**);
