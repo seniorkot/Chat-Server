@@ -13,3 +13,7 @@ Simple chatroom for 50 users.
 ### Available
 * Sending messages;
 * Changing nickname;
+
+## Version 0.1.1 (29.11.2016)
+* All found bugs fixed.
+* No global variables any more.
