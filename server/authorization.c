@@ -57,7 +57,5 @@ int sign_up(const char* login, const char* password, client_t* const client){
 	}
 	fclose(file);
 	return 1;
-		fclose(file);
-		return 1;
 	}
 }
