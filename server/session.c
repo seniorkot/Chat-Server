@@ -27,6 +27,9 @@ void* session(void *args)
 		{
 			continue;
 		}
+		else if(!client->authorized){
+			send_private_msg("[SERVER_MSG]: You are not authorized!\n", client->uid, clients);
+		}
 		/* If command was typed */
 		else if(buff_in[0]=='\\')
 		{

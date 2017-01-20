@@ -8,4 +8,5 @@ typedef struct {
 	int clientfd;				/* Client's connection fd */
 	int uid;					/* Client's User ID */
 	char name[24];				/* Client's nickname */
+	int authorized;				/* 1 - yes, 0 - no */
 } client_t;
