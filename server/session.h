@@ -9,8 +9,6 @@
 #include <arpa/inet.h>
 
 #include "client_t.h"
-#include "message.h"
-#include "commands.h"
 
 void* session(void*);
 void add_user(client_t*, client_t**);

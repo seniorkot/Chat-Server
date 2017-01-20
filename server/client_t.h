@@ -1,4 +1,8 @@
 #pragma once
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
 #define MAX_CLIENTS 50 /* Change if necessary */
 #define BUFFER_SIZE 512 /* Change if necessary */
 

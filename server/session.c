@@ -1,4 +1,6 @@
 #include "session.h"
+#include "commands.h"
+#include "message.h"
 
 static size_t client_count = 0; /* Number of clients */
 
@@ -13,9 +15,6 @@ void* session(void *args)
 	client = sargs->client;
 	clients = sargs->clients;
 	
-	sprintf(buff_out, "[SERVER_MSG]: %s has joined the server.\n", client->name);
-	send_msg(buff_out, client->uid, clients);
-	
 	memset(buff_in, 0, BUFFER_SIZE);
 	memset(buff_out, 0, BUFFER_SIZE);
 	/* Active when client is connected */
@@ -28,7 +27,19 @@ void* session(void *args)
 			continue;
 		}
 		else if(!client->authorized){
-			send_private_msg("[SERVER_MSG]: You are not authorized!\n", client->uid, clients);
+			char* command;
+			command = strtok(buff_in, " \0");
+			if(!strcmp(command,"\\login"))
+			{
+				cmd_login(client, clients);
+			}
+			else if(!strcmp(command,"\\register"))
+			{
+				cmd_register(client, clients);
+			}
+			else{
+				send_private_msg("[SERVER_MSG]: You are not authorized! (type \\login or \\register)\n", client->uid, clients);
+			}
 		}
 		/* If command was typed */
 		else if(buff_in[0]=='\\')
@@ -40,17 +51,17 @@ void* session(void *args)
 				cmd_quit(client, clients);
 				break;
 			}
-			else if(!strcmp(command,"\\name"))
+			/*else if(!strcmp(command,"\\name"))
 			{
 				cmd_name(client, clients);
-			}
+			}*/
 			else if(!strcmp(command,"\\help"))
 			{
 				cmd_help(client, clients);
 			}
 			else
 			{
-				cmd_unknown(client, clients);
+				cmd_unknown(client, clients, command);
 			}
 		}
 		/* Print message to others */
