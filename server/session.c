@@ -51,10 +51,10 @@ void* session(void *args)
 				cmd_quit(client, clients);
 				break;
 			}
-			/*else if(!strcmp(command,"\\name"))
+			else if(!strcmp(command,"\\name"))
 			{
 				cmd_name(client, clients);
-			}*/
+			}
 			else if(!strcmp(command,"\\help"))
 			{
 				cmd_help(client, clients);

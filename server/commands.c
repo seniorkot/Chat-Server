@@ -62,10 +62,23 @@ void cmd_name(client_t* client, client_t** clients)
 	param = strtok(NULL, " \0");
 	if(param){
 		char old_name[24];
+		char filepath[64];
+		char newfilepath[64];
 		strcpy(old_name, client->name);
-		strcpy(client->name, param);
-		sprintf(buff_out, "[SERVER_MSG]: %s is now %s.\n", old_name, client->name);
-		send_msg_all(buff_out, clients);
+		memset(filepath, 0, 64);
+		memset(newfilepath, 0, 64);
+		strcat(filepath, ".profile/");
+		strcat(filepath, old_name);
+		strcat(newfilepath, ".profile/");
+		strcat(newfilepath, param);
+		if(!rename(filepath, newfilepath)){
+			strcpy(client->name, param);
+			sprintf(buff_out, "[SERVER_MSG]: %s is now %s.\n", old_name, client->name);
+			send_msg_all(buff_out, clients);
+		}
+		else{
+			send_private_msg("[SERVER_MSG]: Can't rename!\n", client->uid, clients);
+		}
 	}else{
 		send_private_msg("[SERVER_MSG]: Incorrect name! Please, try again!\n", client->uid, clients);
 	}
