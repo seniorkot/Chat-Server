@@ -5,8 +5,9 @@ Log in on server
 Returns: 0 when succeeded
 		-1 when user not found (or cannot open file)
 		 1 when incorrect password was entered
+		 2 when user already online
 */
-int sign_in(const char* login, const char* password, client_t* const client){
+int sign_in(const char* login, const char* password, client_t* const client, client_t** clients){
 	FILE* file;
 	char filepath[BUFFER_SIZE];
 	char buff[BUFFER_SIZE];
@@ -22,6 +23,9 @@ int sign_in(const char* login, const char* password, client_t* const client){
 	fgets(buff, BUFFER_SIZE-1, file);
 	fclose(file);
 	if(!strcmp(buff,password)){
+		if(get_user_id(login, clients)){
+			return 2;
+		}
 		strcpy(client->name, login);
 		client->authorized=1;
 		return 0;
@@ -62,4 +66,18 @@ int sign_up(const char* login, const char* password, client_t* const client){
 	}
 	fclose(file);
 	return 1;
+}
+
+/*
+Returns: 0 if user offline
+		id if user online
+*/
+int get_user_id(const char* name, client_t** clients){
+	size_t i;
+	for (i=0; i<MAX_CLIENTS; i++){
+		if(clients[i] != NULL && !strcmp(name, clients[i]->name)){
+			return clients[i]->uid;
+		}
+	}
+	return 0;
 }

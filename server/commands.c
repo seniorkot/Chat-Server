@@ -16,7 +16,7 @@ int cmd_exec(char* command, client_t* client, client_t** clients)
 	{
 		cmd_online(client, clients);
 	}
-	else if(!strcmp(command,"\\help"))
+	else if(!strcmp(command,"\\help") || !strcmp(command,"\\h"))
 	{
 		cmd_help(client, clients);
 	}
@@ -35,16 +35,19 @@ void cmd_login(client_t* client, client_t** clients)
 	login = strtok(NULL, " \0");
 	passwd = strtok(NULL, " \0");
 	if (login && passwd){
-		if(!(result = sign_in(login, passwd, client))){
+		if(!(result = sign_in(login, passwd, client, clients))){
 			char buff_out[BUFFER_SIZE];
 			sprintf(buff_out, "[SERVER_MSG]: %s has logged in.\n", client->name);
 			send_msg(buff_out, client->uid, clients);
 		}
 		else if(result==1){
-			send_private_msg("[SERVER_MSG]: Incorrect password! Please, try again!\n", client->uid, clients);
+			send_private_msg("[SERVER_MSG]: Incorrect password. Please, try again.\n", client->uid, clients);
+		}
+		else if(result==2){
+			send_private_msg("[SERVER_MSG]: User is already online.\n", client->uid, clients);
 		}
 		else{
-			send_private_msg("[SERVER_MSG]: User not found! Please, try again!\n", client->uid, clients);
+			send_private_msg("[SERVER_MSG]: User not found. Please, try again.\n", client->uid, clients);
 		}
 	}
 	else{
@@ -66,7 +69,7 @@ void cmd_register(client_t* client, client_t** clients)
 			send_msg(buff_out, client->uid, clients);
 		}
 		else if(result==1){
-			send_private_msg("[SERVER_MSG]: User already exists! Please, try again!\n", client->uid, clients);
+			send_private_msg("[SERVER_MSG]: User already exists. Please, try again!\n", client->uid, clients);
 		}
 	}
 	else{
@@ -104,10 +107,10 @@ void cmd_name(client_t* client, client_t** clients)
 			send_msg_all(buff_out, clients);
 		}
 		else{
-			send_private_msg("[SERVER_MSG]: Can't rename!\n", client->uid, clients);
+			send_private_msg("[SERVER_MSG]: Can't rename.\n", client->uid, clients);
 		}
 	}else{
-		send_private_msg("[SERVER_MSG]: Incorrect name! Please, try again!\n", client->uid, clients);
+		send_private_msg("[SERVER_MSG]: Incorrect name. Please, try again.\n", client->uid, clients);
 	}
 }
 
@@ -116,9 +119,9 @@ void cmd_help(client_t* client, client_t** clients)
 	char buff_out[BUFFER_SIZE];
 	memset(buff_out, 0, BUFFER_SIZE);
 	strcat(buff_out, "[SERVER_MSG]: \\name \tChange nickname;\n");
-	strcat(buff_out, "[SERVER_MSG]: \\online \tShow users online;\n");
-	strcat(buff_out, "[SERVER_MSG]: \\help \tShow this help;\n");
-	strcat(buff_out, "[SERVER_MSG]: \\quit \tLeave chat;\n");
+	strcat(buff_out, "[SERVER_MSG]: \\online \tPrint users online;\n");
+	strcat(buff_out, "[SERVER_MSG]: \\h(elp) \tPrint this help;\n");
+	strcat(buff_out, "[SERVER_MSG]: \\q(uit) \tLeave chat;\n");
 	send_private_msg(buff_out, client->uid, clients);
 }
 
@@ -142,6 +145,6 @@ void cmd_online(client_t* client, client_t** clients)
 void cmd_unknown(client_t* client, client_t** clients, char* command)
 {
 	char buff_out[BUFFER_SIZE];
-	sprintf(buff_out, "[SERVER_MSG]: %s is unknown command! Type \\help for help.\n", command);
+	sprintf(buff_out, "[SERVER_MSG]: %s is unknown command. Type \\help for help.\n", command);
 	send_private_msg(buff_out, client->uid, clients);
 }
