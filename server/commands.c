@@ -1,6 +1,32 @@
 #include "commands.h"
 #include "authorization.h"
 
+int cmd_exec(char* command, client_t* client, client_t** clients)
+{
+	if(!strcmp(command,"\\quit") || !strcmp(command,"\\q"))
+	{
+		cmd_quit(client, clients);
+		return 1;
+	}
+	else if(!strcmp(command,"\\name"))
+	{
+		cmd_name(client, clients);
+	}
+	else if(!strcmp(command,"\\online"))
+	{
+		cmd_online(client, clients);
+	}
+	else if(!strcmp(command,"\\help"))
+	{
+		cmd_help(client, clients);
+	}
+	else
+	{
+		cmd_unknown(client, clients, command);
+	}
+	return 0;
+}
+
 void cmd_login(client_t* client, client_t** clients)
 {
 	char* login;
@@ -72,6 +98,7 @@ void cmd_name(client_t* client, client_t** clients)
 		strcat(newfilepath, ".profile/");
 		strcat(newfilepath, param);
 		if(!rename(filepath, newfilepath)){
+			chmod(newfilepath, 0700);
 			strcpy(client->name, param);
 			sprintf(buff_out, "[SERVER_MSG]: %s is now %s.\n", old_name, client->name);
 			send_msg_all(buff_out, clients);
@@ -89,8 +116,26 @@ void cmd_help(client_t* client, client_t** clients)
 	char buff_out[BUFFER_SIZE];
 	memset(buff_out, 0, BUFFER_SIZE);
 	strcat(buff_out, "[SERVER_MSG]: \\name \tChange nickname;\n");
+	strcat(buff_out, "[SERVER_MSG]: \\online \tShow users online;\n");
 	strcat(buff_out, "[SERVER_MSG]: \\help \tShow this help;\n");
 	strcat(buff_out, "[SERVER_MSG]: \\quit \tLeave chat;\n");
+	send_private_msg(buff_out, client->uid, clients);
+}
+
+void cmd_online(client_t* client, client_t** clients)
+{
+	char buff_out[BUFFER_SIZE];
+	size_t i;
+	sprintf(buff_out, "[SERVER_MSG]: Users online:\n");
+	for(i=0;i<MAX_CLIENTS;i++)
+	{
+		if(clients[i] != NULL)
+		{
+			strcat(buff_out, clients[i]->name);
+			strcat(buff_out, "\n");
+		}
+	}
+	
 	send_private_msg(buff_out, client->uid, clients);
 }
 

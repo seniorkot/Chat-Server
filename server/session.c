@@ -46,22 +46,8 @@ void* session(void *args)
 		{
 			char* command;
 			command = strtok(buff_in, " \0");
-			if(!strcmp(command,"\\quit"))
-			{
-				cmd_quit(client, clients);
+			if(cmd_exec(command, client, clients)){
 				break;
-			}
-			else if(!strcmp(command,"\\name"))
-			{
-				cmd_name(client, clients);
-			}
-			else if(!strcmp(command,"\\help"))
-			{
-				cmd_help(client, clients);
-			}
-			else
-			{
-				cmd_unknown(client, clients, command);
 			}
 		}
 		/* Print message to others */
