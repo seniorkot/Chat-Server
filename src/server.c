@@ -7,8 +7,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#include "../includes/client_t.h"
-#include "../includes/session.h"
+#include <client_t.h>
+#include <session.h>
 
 int main(int argc, char *argv[])
 {

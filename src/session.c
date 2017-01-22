@@ -1,6 +1,6 @@
-#include "../includes/session.h"
-#include "../includes/commands.h"
-#include "../includes/message.h"
+#include <session.h>
+#include <commands.h>
+#include <message.h>
 
 static size_t client_count = 0; /* Number of clients */
 

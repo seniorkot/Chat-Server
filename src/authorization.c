@@ -1,4 +1,4 @@
-#include "../includes/authorization.h"
+#include <authorization.h>
 
 /*
 Log in on server

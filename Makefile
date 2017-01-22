@@ -1,6 +1,6 @@
 COMP=gcc
 TARGET=c_server
-CFLAGS= -std=c89 -pedantic -Wall -Werror -lpthread
+CFLAGS= -std=c89 -pedantic -Wall -Werror -lpthread -I include
 SRC=$(wildcard src/*.c)
 BUILD=$(SRC:src/%.c=%.o)
 

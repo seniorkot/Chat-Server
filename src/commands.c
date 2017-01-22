@@ -1,5 +1,5 @@
-#include "../includes/commands.h"
-#include "../includes/authorization.h"
+#include <commands.h>
+#include <authorization.h>
 
 int cmd_exec(char* command, client_t* client, client_t** clients)
 {
