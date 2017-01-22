@@ -1,8 +1,22 @@
 COMP=gcc
 TARGET=c_server
-CFLAGS= -std=c89 -pedantic -Wall -lpthread
-MLINK= -o
-FILES= ./server/server.c ./server/session.c ./server/message.c
+CFLAGS= -std=c89 -pedantic -Wall -Werror -lpthread
+SRC=$(wildcard server/*.c)
+BUILD=$(SRC:server/%.c=%.o)
 
-c_server: ./server/server.c
-	$(COMP) $(MLINK) $(TARGET) $(CFLAGS) $(FILES)
+$(TARGET): $(BUILD)
+	$(COMP) $(CFLAGS) $(BUILD) -o $(TARGET)
+	
+%.o: server/%.c
+	$(COMP) -c -o $@ $(CFLAGS) $^
+
+clean:
+	rm -rf *.o
+
+install: $(TARGET)
+	mkdir -p -m=0700 .profile/admin
+	echo "qwerty" > .profile/admin/password
+
+uninstall:
+	rm -rf .profile
+	rm $(TARGET)
