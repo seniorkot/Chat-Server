@@ -16,6 +16,7 @@ int cmd_exec(char*, client_t*, client_t**);
 void cmd_login(client_t*, client_t**);
 void cmd_register(client_t*, client_t**);
 void cmd_quit(client_t*, client_t**);
+void cmd_pm(client_t*, client_t**);
 void cmd_name(client_t*, client_t**);
 void cmd_help(client_t*, client_t**);
 void cmd_online(client_t*, client_t**);

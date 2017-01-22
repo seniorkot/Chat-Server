@@ -3,10 +3,14 @@
 
 int cmd_exec(char* command, client_t* client, client_t** clients)
 {
-	if(!strcmp(command,"\\quit") || !strcmp(command,"\\q"))
+	if(!strcmp(command,"\\q") || !strcmp(command,"\\quit"))
 	{
 		cmd_quit(client, clients);
 		return 1;
+	}
+	else if(!strcmp(command,"\\pm"))
+	{
+		cmd_pm(client, clients);
 	}
 	else if(!strcmp(command,"\\name"))
 	{
@@ -16,7 +20,7 @@ int cmd_exec(char* command, client_t* client, client_t** clients)
 	{
 		cmd_online(client, clients);
 	}
-	else if(!strcmp(command,"\\help") || !strcmp(command,"\\h"))
+	else if(!strcmp(command,"\\h") || !strcmp(command,"\\help"))
 	{
 		cmd_help(client, clients);
 	}
@@ -84,6 +88,30 @@ void cmd_quit(client_t* client, client_t** clients)
 	send_msg(buff_out, client->uid, clients);
 }
 
+void cmd_pm(client_t* client, client_t** clients)
+{
+	char buff_out[BUFFER_SIZE];
+	char* buff;
+	char* name;
+	int uid;
+	name = strtok(NULL, " \0");
+	if (!name || !(buff=strtok(NULL, "\0"))){
+		send_private_msg("[SERVER_MSG]: Use \\pm [user] [msg]\n", client->uid, clients);
+	}
+	else{
+		if((uid = get_user_id(name, clients))){
+			sprintf(buff_out, "[%s](pm): ", client->name);
+			strcat(buff_out, buff);
+			strcat(buff_out, "\n");
+			send_private_msg(buff_out, uid, clients);
+		}
+		else{
+			sprintf(buff_out, "[SERVER_MSG]: %s is offline.\n", name);
+			send_private_msg(buff_out, client->uid, clients);
+		}
+	}
+}
+
 void cmd_name(client_t* client, client_t** clients)
 {
 	char buff_out[BUFFER_SIZE];
@@ -118,10 +146,13 @@ void cmd_help(client_t* client, client_t** clients)
 {
 	char buff_out[BUFFER_SIZE];
 	memset(buff_out, 0, BUFFER_SIZE);
-	strcat(buff_out, "[SERVER_MSG]: \\name \tChange nickname;\n");
-	strcat(buff_out, "[SERVER_MSG]: \\online \tPrint users online;\n");
-	strcat(buff_out, "[SERVER_MSG]: \\h(elp) \tPrint this help;\n");
-	strcat(buff_out, "[SERVER_MSG]: \\q(uit) \tLeave chat;\n");
+	strcat(buff_out, "---------Available commands:---------\n");
+	strcat(buff_out, "\\online \tPrint users online;\n");
+	strcat(buff_out, "\\pm \tSend private message;\n");
+	strcat(buff_out, "\\name \tChange nickname;\n");
+	strcat(buff_out, "\\h(elp) \tPrint this help;\n");
+	strcat(buff_out, "\\q(uit) \tLeave chat;\n");
+	strcat(buff_out, "-------------------------------------\n");
 	send_private_msg(buff_out, client->uid, clients);
 }
 
@@ -129,7 +160,7 @@ void cmd_online(client_t* client, client_t** clients)
 {
 	char buff_out[BUFFER_SIZE];
 	size_t i;
-	sprintf(buff_out, "[SERVER_MSG]: Users online:\n");
+	sprintf(buff_out, "------Users online:------\n");
 	for(i=0;i<MAX_CLIENTS;i++)
 	{
 		if(clients[i] != NULL)
@@ -138,7 +169,7 @@ void cmd_online(client_t* client, client_t** clients)
 			strcat(buff_out, "\n");
 		}
 	}
-	
+	strcat(buff_out, "-------------------------\n");
 	send_private_msg(buff_out, client->uid, clients);
 }
 
