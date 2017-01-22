@@ -12,13 +12,17 @@ int cmd_exec(char* command, client_t* client, client_t** clients)
 	{
 		cmd_pm(client, clients);
 	}
+	else if(!strcmp(command,"\\online"))
+	{
+		cmd_online(client, clients);
+	}
 	else if(!strcmp(command,"\\name"))
 	{
 		cmd_name(client, clients);
 	}
-	else if(!strcmp(command,"\\online"))
+	else if(!strcmp(command,"\\passwd"))
 	{
-		cmd_online(client, clients);
+		cmd_passwd(client, clients);
 	}
 	else if(!strcmp(command,"\\h") || !strcmp(command,"\\help"))
 	{
@@ -122,12 +126,8 @@ void cmd_name(client_t* client, client_t** clients)
 		char filepath[64];
 		char newfilepath[64];
 		strcpy(old_name, client->name);
-		memset(filepath, 0, 64);
-		memset(newfilepath, 0, 64);
-		strcat(filepath, ".profile/");
-		strcat(filepath, old_name);
-		strcat(newfilepath, ".profile/");
-		strcat(newfilepath, param);
+		sprintf(filepath, ".profile/%s", old_name);
+		sprintf(newfilepath, ".profile/%s", param);
 		if(!rename(filepath, newfilepath)){
 			chmod(newfilepath, 0700);
 			strcpy(client->name, param);
@@ -142,6 +142,39 @@ void cmd_name(client_t* client, client_t** clients)
 	}
 }
 
+void cmd_passwd(client_t* client, client_t** clients)
+{
+	FILE* file;
+	char buff[BUFFER_SIZE];
+	char *old_passwd;
+	char *new_passwd;
+	old_passwd = strtok(NULL, " \0");
+	new_passwd = strtok(NULL, " \0");
+	if(old_passwd && new_passwd){
+		char filepath[64];
+		sprintf(filepath, ".profile/%s/password", client->name);
+		file = fopen(filepath, "rb");
+		if (file==NULL){
+			send_private_msg("[SERVER_MSG]: Can't change password.\n", client->uid, clients);
+		}
+		else{
+			fgets(buff, BUFFER_SIZE-1, file);
+			if(!strcmp(buff,old_passwd)){
+				fclose(file);
+				file = fopen(filepath, "wb");
+				fputs(new_passwd, file);
+				send_private_msg("[SERVER_MSG]: Password changed.\n", client->uid, clients);
+			}
+			else{
+				send_private_msg("[SERVER_MSG]: Incorrect password. Please, try again.\n", client->uid, clients);
+			}
+			fclose(file);
+		}
+	}else{
+		send_private_msg("[SERVER_MSG]: Use \\passwd [old] [new]\n", client->uid, clients);
+	}
+}
+
 void cmd_help(client_t* client, client_t** clients)
 {
 	char buff_out[BUFFER_SIZE];
@@ -150,6 +183,7 @@ void cmd_help(client_t* client, client_t** clients)
 	strcat(buff_out, "\\online \tPrint users online;\n");
 	strcat(buff_out, "\\pm \tSend private message;\n");
 	strcat(buff_out, "\\name \tChange nickname;\n");
+	strcat(buff_out, "\\passwd \tChange password;\n");
 	strcat(buff_out, "\\h(elp) \tPrint this help;\n");
 	strcat(buff_out, "\\q(uit) \tLeave chat;\n");
 	strcat(buff_out, "-------------------------------------\n");
