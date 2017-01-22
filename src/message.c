@@ -1,4 +1,4 @@
-#include "message.h"
+#include "../includes/message.h"
 
 /* Send message to all users except 1 user */
 void send_msg(char* msg, int uid, client_t** clients)

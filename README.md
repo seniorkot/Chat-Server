@@ -8,8 +8,9 @@ Run make in the repository
 * `make uninstall` to uninstall program
 
 # Using
-`./c_server [port]` to run server
-You can get client [here](https://github.com/seniorkot/Chat-Client)
+`./c_server [port]` to run server<br>
+You can get client [here](https://github.com/seniorkot/Chat-Client)<br>
+After installing there is account `admin` with password `qwerty`
 
 # Version 0.2 (22.01.2017)
 Chatroom for 50 users with few commands and authorization system.
