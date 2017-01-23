@@ -26,21 +26,6 @@ void* session(void *args)
 		{
 			continue;
 		}
-		else if(!client->authorized){
-			char* command;
-			command = strtok(buff_in, " \0");
-			if(!strcmp(command,"\\login"))
-			{
-				cmd_login(client, clients);
-			}
-			else if(!strcmp(command,"\\register"))
-			{
-				cmd_register(client, clients);
-			}
-			else{
-				send_private_msg("[SERVER_MSG]: You are not authorized! (type \\login or \\register)\n", client->uid, clients);
-			}
-		}
 		/* If command was typed */
 		else if(buff_in[0]=='\\')
 		{
@@ -53,8 +38,13 @@ void* session(void *args)
 		/* Print message to others */
 		else
 		{
-			sprintf(buff_out, "[%s]: %s\n", client->name, buff_in);
-			send_msg(buff_out, client->uid, clients);
+			if(client->privilege>0){
+				sprintf(buff_out, "[%s]: %s\n", client->name, buff_in);
+				send_msg(buff_out, client->uid, clients);
+			}
+			else{
+				send_private_msg("[SERVER_MSG]: You are not authorized! (type \\login or \\register)\n", client->uid, clients);
+			}
 		}
 	memset(buff_in, 0, BUFFER_SIZE);
 	memset(buff_out, 0, BUFFER_SIZE);

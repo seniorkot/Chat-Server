@@ -8,6 +8,14 @@ int cmd_exec(char* command, client_t* client, client_t** clients)
 		cmd_quit(client, clients);
 		return 1;
 	}
+	else if(!strcmp(command,"\\login"))
+	{
+		cmd_login(client, clients);
+	}
+	else if(!strcmp(command,"\\register"))
+	{
+		cmd_register(client, clients);
+	}
 	else if(!strcmp(command,"\\pm"))
 	{
 		cmd_pm(client, clients);

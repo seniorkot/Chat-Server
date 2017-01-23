@@ -27,7 +27,7 @@ int sign_in(const char* login, const char* password, client_t* const client, cli
 			return 2;
 		}
 		strcpy(client->name, login);
-		client->authorized=1;
+		client->privilege=1;
 		return 0;
 	}
 	return 1;
@@ -61,7 +61,7 @@ int sign_up(const char* login, const char* password, client_t* const client){
 		fputs(password, file);
 		fclose(file);
 		strcpy(client->name, login);
-		client->authorized=1;
+		client->privilege=1;
 		return 0;
 	}
 	fclose(file);

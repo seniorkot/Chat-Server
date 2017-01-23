@@ -12,5 +12,6 @@ typedef struct {
 	int clientfd;				/* Client's connection fd */
 	int uid;					/* Client's User ID */
 	char name[24];				/* Client's nickname */
-	int authorized;				/* 1 - yes, 0 - no */
+	int privilege;				/* -1 - banned; 0 - guest 
+									1 - user; 2 - admin */
 } client_t;

@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 		client->addr = client_addr;
 		client->clientfd = clisockfd;
 		client->uid = uid;
-		client->authorized = 0;
+		client->privilege = 0;
 		sprintf(client->name, "guest%lu", uid);
 		
 		/* Add user to UserList and create new thread */
