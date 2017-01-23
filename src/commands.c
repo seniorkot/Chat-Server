@@ -208,6 +208,12 @@ void cmd_online(client_t* client, client_t** clients)
 		if(clients[i] != NULL)
 		{
 			strcat(buff_out, clients[i]->name);
+			if(!clients[i]->privilege){
+				strcat(buff_out, " (guest)");
+			}
+			else if(clients[i]->privilege == 2){
+				strcat(buff_out, " (admin)");
+			}
 			strcat(buff_out, "\n");
 		}
 	}
